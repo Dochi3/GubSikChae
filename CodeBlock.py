@@ -5,9 +5,10 @@ from PyQt5.QtWidgets import QTextEdit, QLabel
 import time
 
 class CodeBlock(QWidget):
-    def __init__(self):
+    def __init__(self, parent=None):
         super().__init__()
-        self.focusedTime = 0
+        self.parent = parent
+        self.focusedTime = time.time()
         # GridLayout for CodeBlock
         glCodeBlock = QGridLayout()
 
@@ -35,14 +36,14 @@ class CodeBlock(QWidget):
         text = "bn [" + num + "] : "
         self.lbBlockNumber.setText(text)
 
-    def mousePressEvent(self, e):
+    def mousePressEvent(self, event):
         self.focusedTime = time.time()
-        #self.lbIsFocused.setStyleSheet("QLabel{ background-color : red; color : blue; }")
+        if self.parent:
+            self.parent.mousePressEvent(event)
 
+    def focusIn(self):
+        self.lbIsFocused.setStyleSheet("QLabel{ background-color : red; color : blue; }")
 
-if __name__ == "__main__":
-    import sys
-    app = QApplication(sys.argv)
-    cb = CodeBlock()
-    cb.show()
-    sys.exit(app.exec_())
+    def focusOut(self):
+        self.lbIsFocused.setStyleSheet("QLabel{ background-color : gray; color : blue; }")
+        
