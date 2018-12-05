@@ -3,10 +3,11 @@ import OpCodes
 class Interpreter:
 
     def __init__(self):
-        self.opCodes = []
+        self.Memo
 
-    def Interpret(self,Code):
-        Words = Code.split()
+    def interpret(self, codes):
+        Words = codes.split()
+        opCodes = []
         Stack = []
         check_Remark = True
         for idx, word in enumerate(Words):
@@ -22,8 +23,10 @@ class Interpreter:
                 if opCode == OpCodes.Op_Condition_Begin:
                     Stack.append(idx)
                 if opCode == OpCodes.Op_Condition_End:
-                    self.opCodes[Stack[-1]] = (self.opCodes[Stack[-1]][0], idx)
+                    opCodes[Stack[-1]] = (opCodes[Stack[-1]][0], idx)
                     idx = Stack[-1]
                     Stack.pop()
 
-                self.opCodes.append((opCode,idx))
+                opCodes.append((opCode,idx))
+
+    def execute(self, codes):
