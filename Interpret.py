@@ -3,7 +3,10 @@ import OpCodes
 class Interpreter:
 
     def __init__(self):
-        self.Memo
+        self.typePointer = 0
+        self.memoryPointer = 0
+        self.memory = [[], [], []]
+        self.calculatorMemory = []
 
     def interpret(self, codes):
         Words = codes.split()
