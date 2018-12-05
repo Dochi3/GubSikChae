@@ -1,6 +1,6 @@
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QApplication, QWidget
-from PyQt5.QtWidgets import QLayout, QGridLayout
+from PyQt5.QtWidgets import QGridLayout
 from PyQt5.QtWidgets import QTextEdit, QLabel
 import time
 
@@ -46,4 +46,3 @@ class CodeBlock(QWidget):
 
     def focusOut(self):
         self.lbIsFocused.setStyleSheet("QLabel{ background-color : gray; color : blue; }")
-        

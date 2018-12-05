@@ -3,6 +3,7 @@ import Shortcuts
 
 from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget
 from PyQt5.QtWidgets import QHBoxLayout, QVBoxLayout, QGridLayout
+from PyQt5.QtWidgets import QScrollArea
 from PyQt5.QtWidgets import QLabel
 
 class Editor(QMainWindow):
@@ -13,9 +14,16 @@ class Editor(QMainWindow):
         self.index = -1
         self.excuteNumber = 0
 
+        self.initUI()
+
+    def initUI(self):
         # Widget of CodeBlock
         wgCodeBlocks = QWidget()
+        saCodeBlocks = QScrollArea()
+        saCodeBlocks.setWidget(wgCodeBlocks)
+        saCodeBlocks.setWidgetResizable(True)
         self.vblCodeBlocks = QVBoxLayout()
+        #self.vblCodeBlocks.SetFixedSize()
         wgCodeBlocks.setLayout(self.vblCodeBlocks)
         self.newCodeBlock()
 
@@ -28,6 +36,7 @@ class Editor(QMainWindow):
         wgEditor.setLayout(hblEditor)
         self.setCentralWidget(wgEditor)
         self.mousePressEvent(None)
+        self.showMaximized()
 
     def setCodeBoxLayout(self):
         # remove all items of vblCodeBlocks
