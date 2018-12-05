@@ -5,7 +5,7 @@ class Interpreter:
     def __init__(self):
         self.opCodes = []
 
-    def Interpret(self,Code):
+    def interpret(self,Code):
         Words = Code.split()
         Stack = []
         check_Remark = True
