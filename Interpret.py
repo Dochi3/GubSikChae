@@ -31,5 +31,6 @@ class Interpreter:
                     Stack.pop()
 
                 opCodes.append((opCode,idx))
+        return opCodes
 
     def execute(self, codes):
