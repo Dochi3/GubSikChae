@@ -28,4 +28,4 @@ class Viewer(QWidget):
         vblViewer = QVBoxLayout()
         vblViewer.addWidget(twStd)
         self.setLayout(vblViewer)
-        self.setMaximumSize(500, 300)
+        self.setMaximumSize(600, 300)
