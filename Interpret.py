@@ -95,10 +95,10 @@ class Interpreter:
                     self.calculatorMemory.pop()
                 self.calculatorMemory.append(temp)
             elif code == OpCodes.Op_Type_Move_Left:
-                self.typePointer = (self.typePointer + 2) // 3
+                self.typePointer = (self.typePointer + 2) % 3
                 self.memoryPointer = 0
             elif code == OpCodes.Op_Type_Move_Right:
-                self.typePointer = (self.typePointer + 1) // 3
+                self.typePointer = (self.typePointer + 1) % 3
                 self.memoryPointer = 0
             elif code == OpCodes.Op_Memory_Move_Up:
                 self.memoryPointer -= 1
@@ -163,6 +163,7 @@ class Interpreter:
                 temp = self.memory[self.typePointer][self.memoryPointer]
                 if self.typePointer == typeChar:
                     text = chr(temp)
+                    print(type(text), text)
                 else:
                     text = str(temp)
                 stdout += text
