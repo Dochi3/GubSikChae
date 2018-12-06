@@ -48,6 +48,7 @@ class Interpreter:
         while idx < len(codes):
             code, nextIdx = codes[idx]
             if isNumCode(code):
+                idx += 1
                 continue
             temp = 0
             if code == OpCodes.Op_Add:
