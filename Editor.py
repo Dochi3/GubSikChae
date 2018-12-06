@@ -83,7 +83,7 @@ class Editor(QMainWindow):
         try:
             stdout = self.interpreter.execute(code, stdin)
         except Exception as e:
-            stdout = e
+            stdout = str(e)
         self.viewer.teStdout.setText(stdout)
         self.control.changeStatus("Paused")
 
