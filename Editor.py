@@ -16,7 +16,8 @@ class Editor(QMainWindow):
         self.codeBlocks = list()
         self.index = -1
         self.excuteNumber = 0
-        self.interpreter = Interpreter()
+        self.interpreter = None
+        self.restartProcess()
 
         self.initUI()
 
@@ -48,7 +49,6 @@ class Editor(QMainWindow):
         wgEditor = QWidget()
         wgEditor.setLayout(glEditor)
         self.setCentralWidget(wgEditor)
-        self.setAlignment(Qt.AlignTop)
         self.mousePressEvent(None)
         self.showMaximized()
 
@@ -82,7 +82,9 @@ class Editor(QMainWindow):
     # restart Process
     def restartProcess(self):
         self.excuteNumber = 0
-        # Add About Clear All Process
+        self.interpreter = Interpreter()
+        for codeBlock in self.codeBlocks:
+            codeBlock.setNumber()
 
     # remove CodeBlock
     def removeCodeBlock(self):
@@ -128,15 +130,6 @@ class Editor(QMainWindow):
     def keyReleaseEvent(self, event):
         if event.key() in self.keyPressed:
             self.keyPressed.remove(event.key())
-        
-    def saveFile(self):
-        data = str()
-        for codeBlock in self.codeBlocks:
-            data += ("##CodeBlock##\n" + codeBlock.getCode().rstrip() + "\n")
-        return data
-    
-    def loadFile(self):
-        pass
     
     def executeBtn(self):
         pass

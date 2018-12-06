@@ -51,10 +51,10 @@ class CodeBlock(QWidget):
         self.teCodeBox.setFixedHeight(rowHeight * nRows + 10)
 
     def focusIn(self):
-        self.lbIsFocused.setStyleSheet("QLabel{ background-color : red; color : blue; }")
+        self.lbIsFocused.setStyleSheet("QLabel{ background-color : red;}")
 
     def focusOut(self):
-        self.lbIsFocused.setStyleSheet("QLabel{ background-color : gray; color : blue; }")
+        self.lbIsFocused.setStyleSheet("QLabel{ background-color : gray;}")
     
     def getCode(self):
         return self.teCodeBox.toPlainText()
