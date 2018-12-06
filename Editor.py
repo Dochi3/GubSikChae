@@ -8,7 +8,7 @@ from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget
 from PyQt5.QtWidgets import QHBoxLayout, QVBoxLayout, QGridLayout
 from PyQt5.QtWidgets import QScrollArea
 from PyQt5.QtWidgets import QLabel
-
+from multiprocessing import Process
 class Editor(QMainWindow):
     def __init__(self):
         super().__init__()
@@ -17,7 +17,7 @@ class Editor(QMainWindow):
         self.index = -1
         self.excuteNumber = 0
         self.interpreter = Interpreter()
-
+        self.process = None
         self.initUI()
 
     def initUI(self):
@@ -123,6 +123,15 @@ class Editor(QMainWindow):
         elif key == Shortcuts.Key_Alt_BackSpace:
             self.removeCodeBlock()
         self.mousePressEvent(event)
+
+    def startProcess(self):
+        self.stopProcess()
+        self.process = Process(target=self.executeCodeBlock())
+
+    def stopProcess(self):
+        if self.process:
+            self.process.terminate()
+        self.process = None
 
     def keyReleaseEvent(self, event):
         if event.key() in self.keyPressed:
