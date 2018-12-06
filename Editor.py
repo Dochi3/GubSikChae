@@ -7,8 +7,7 @@ import Shortcuts
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget
 from PyQt5.QtWidgets import QHBoxLayout, QVBoxLayout, QGridLayout
-from PyQt5.QtWidgets import QScrollArea
-from PyQt5.QtWidgets import QLabel
+from PyQt5.QtWidgets import QLabel, QScrollArea
 from multiprocessing import Process
 class Editor(QMainWindow):
     def __init__(self):
@@ -60,11 +59,17 @@ class Editor(QMainWindow):
         # remove all items of vblCodeBlocks
         for i in reversed(range(self.vblCodeBlocks.count())): 
             self.vblCodeBlocks.itemAt(i).widget().setParent(None)
+
         for i in reversed(range(self.vblCodeBlocks.count())): 
             self.vblCodeBlocks.itemAt(i).widget().deleteLater()
 
         for codeBlock in self.codeBlocks:
             self.vblCodeBlocks.addWidget(codeBlock)
+        
+    def displayMemory(self):
+        memory = self.interpreter.getMemory()
+        pointer = self.interpreter.getPointer()
+        self.viewer.consistMemoryDisplay(memory, pointer)
 
     # add new CodeBlock
     def newCodeBlock(self):
@@ -89,11 +94,27 @@ class Editor(QMainWindow):
 
     # restart Process
     def restartProcess(self):
-        self.stopProcess()
         self.excuteNumber = 0
         self.interpreter = Interpreter()
         for codeBlock in self.codeBlocks:
             codeBlock.setNumber()
+        self.stopProcess()
+
+    def startProcess(self):
+        if self.process:
+            return
+        self.control.changeStatus("Running...")
+        self.process = Process(target=self.executeCodeBlock())
+        self.process.start()
+        self.stopProcess()
+
+    def stopProcess(self):
+        self.control.changeStatus("Paused")
+        if self.process:
+            self.process.terminate()
+        self.process = None
+        if self.interpreter:
+            self.displayMemory()
 
     # remove CodeBlock
     def removeCodeBlock(self):
@@ -135,18 +156,6 @@ class Editor(QMainWindow):
         elif key == Shortcuts.Key_Alt_BackSpace:
             self.removeCodeBlock()
         self.mousePressEvent(event)
-
-    def startProcess(self):
-        self.stopProcess()
-        self.control.changeStatus("Running...")
-        self.process = Process(target=self.executeCodeBlock())
-        self.process.start()
-
-    def stopProcess(self):
-        self.control.changeStatus("Paused")
-        if self.process:
-            self.process.terminate()
-        self.process = None
 
     def keyReleaseEvent(self, event):
         if event.key() in self.keyPressed:
