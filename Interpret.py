@@ -91,7 +91,9 @@ class Interpreter:
                 # divide all elemnet of CM at CM.top
                 temp = self.calculatorMemory[-1] ** 2
                 while self.calculatorMemory:
-                    temp /= self.calculatorMemory
+                    temp /= self.calculatorMemory[-1]
+                    self.calculatorMemory.pop()
+                self.calculatorMemory.append(temp)
             elif code == OpCodes.Op_Type_Move_Left:
                 self.typePointer = (self.typePointer + 2) // 3
                 self.memoryPointer = 0
