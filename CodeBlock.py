@@ -2,6 +2,7 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QApplication, QWidget
 from PyQt5.QtWidgets import QGridLayout
 from PyQt5.QtWidgets import QTextEdit, QLabel
+from PyQt5.QtGui import QFontMetrics
 import time
 
 class CodeBlock(QWidget):
@@ -24,6 +25,8 @@ class CodeBlock(QWidget):
         self.teCodeBox = QTextEdit()
         self.teCodeBox.setMinimumWidth(800)
         self.teCodeBox.mousePressEvent = self.mousePressEvent
+        self.teCodeBox.textChanged.connect(self.fixedHeight)
+        self.fixedHeight()
 
         glCodeBlock.addWidget(self.lbIsFocused, 0, 0)
         glCodeBlock.addWidget(self.lbBlockNumber, 0, 1)
@@ -40,9 +43,18 @@ class CodeBlock(QWidget):
         self.focusedTime = time.time()
         if self.parent:
             self.parent.mousePressEvent(event)
+    
+    def fixedHeight(self):
+        nRows = max(self.teCodeBox.toPlainText().count('\n') + 1, 5)
+        qFontMetrics = QFontMetrics(self.teCodeBox.font())
+        rowHeight = qFontMetrics.lineSpacing() + 1
+        self.teCodeBox.setFixedHeight(rowHeight * nRows + 10)
 
     def focusIn(self):
         self.lbIsFocused.setStyleSheet("QLabel{ background-color : red; color : blue; }")
 
     def focusOut(self):
         self.lbIsFocused.setStyleSheet("QLabel{ background-color : gray; color : blue; }")
+    
+    def getCode(self):
+        return self.teCodeBox.toPlainText()

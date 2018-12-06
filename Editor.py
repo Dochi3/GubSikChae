@@ -1,6 +1,9 @@
 from CodeBlock import CodeBlock
+from Viewer import Viewer
+from Interpret import Interpreter
 import Shortcuts
 
+from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget
 from PyQt5.QtWidgets import QHBoxLayout, QVBoxLayout, QGridLayout
 from PyQt5.QtWidgets import QScrollArea
@@ -13,27 +16,37 @@ class Editor(QMainWindow):
         self.codeBlocks = list()
         self.index = -1
         self.excuteNumber = 0
+        self.interpreter = Interpreter()
 
         self.initUI()
 
     def initUI(self):
-        # Widget of CodeBlock
+        # Widget of CodeBlocks
         wgCodeBlocks = QWidget()
+
         saCodeBlocks = QScrollArea()
         saCodeBlocks.setWidget(wgCodeBlocks)
         saCodeBlocks.setWidgetResizable(True)
+        saCodeBlocks.setAlignment(Qt.AlignTop)
+
         self.vblCodeBlocks = QVBoxLayout()
-        #self.vblCodeBlocks.SetFixedSize()
+        self.vblCodeBlocks.setAlignment(Qt.AlignTop)
         wgCodeBlocks.setLayout(self.vblCodeBlocks)
         self.newCodeBlock()
 
+        # Widget of Control
+
+        # Widget of Viewer
+        self.viewer = Viewer()
+
         # Layout of Editor
-        hblEditor = QHBoxLayout()
-        hblEditor.addWidget(wgCodeBlocks)
+        glEditor = QGridLayout()
+        glEditor.addWidget(saCodeBlocks, 0, 0, 1, 3)
+        glEditor.addWidget(self.viewer, 0, 3, 1, 1)
 
         # Widget of Editor
         wgEditor = QWidget()
-        wgEditor.setLayout(hblEditor)
+        wgEditor.setLayout(glEditor)
         self.setCentralWidget(wgEditor)
         self.mousePressEvent(None)
         self.showMaximized()
@@ -45,7 +58,6 @@ class Editor(QMainWindow):
         for i in reversed(range(self.vblCodeBlocks.count())): 
             self.vblCodeBlocks.itemAt(i).widget().deleteLater()
 
-        # add all items of codeBlocks
         for codeBlock in self.codeBlocks:
             self.vblCodeBlocks.addWidget(codeBlock)
 
@@ -60,7 +72,11 @@ class Editor(QMainWindow):
     def executeCodeBlock(self):
         self.excuteNumber += 1
         self.codeBlocks[self.index].setNumber(self.excuteNumber)
-        # Add About Excute Source
+        
+        code = self.codeBlocks[self.index].getCode()
+        stdin = self.viewer.teStdin.text()
+        stdout = self.interpreter.execute(code, stdin)
+        self.viewer.teStdout.setText(stdout)
 
     # restart Process
     def restartProcess(self):
