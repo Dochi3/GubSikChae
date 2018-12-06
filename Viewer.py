@@ -15,6 +15,7 @@ class Console(QWidget):
         
     def setText(self, txt):
         self.teConsole.setText(txt)
+
 class Viewer(QWidget):
     def __init__(self, parent=None):
         super().__init__()

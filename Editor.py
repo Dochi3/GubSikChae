@@ -16,8 +16,10 @@ class Editor(QMainWindow):
         self.codeBlocks = list()
         self.index = -1
         self.excuteNumber = 0
-        self.interpreter = Interpreter()
         self.process = None
+        self.interpreter = None
+        self.restartProcess()
+
         self.initUI()
 
     def initUI(self):
@@ -81,7 +83,9 @@ class Editor(QMainWindow):
     # restart Process
     def restartProcess(self):
         self.excuteNumber = 0
-        # Add About Clear All Process
+        self.interpreter = Interpreter()
+        for codeBlock in self.codeBlocks:
+            codeBlock.setNumber()
 
     # remove CodeBlock
     def removeCodeBlock(self):
@@ -136,6 +140,12 @@ class Editor(QMainWindow):
     def keyReleaseEvent(self, event):
         if event.key() in self.keyPressed:
             self.keyPressed.remove(event.key())
+    
+    def executeBtn(self):
+        pass
+    
+    def pauseBtn(self):
+        pass
 
 if __name__ == "__main__":
     import sys
