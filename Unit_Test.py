@@ -6,7 +6,7 @@ class TestGuess(unittest.TestCase):
 
 
     def setUp(self):
-        self.interpreter = Interpreter()
+        pass
 
     def tearDown(self):
         pass
@@ -19,21 +19,19 @@ class TestGuess(unittest.TestCase):
         for i in range(len(Samples)):
             Samples[i] = Samples[i].split('_')
             Samples[i][1] = Samples[i][1].rstrip()
-            print(Samples[i])
+            #print(Samples[i])
+        print(Samples)
+        #a = self.interpreter.execute(Samples[1][0])
+        #self.assertEqual(a,Samples[1][1])
 
         for i in range(len(Samples)):
-            self.assertEqual(self.interpreter.execute(Samples[i][0]), Samples[i][1])  # 답은 3
+            self.interpreter = Interpreter()
+            a = ""
+            a = self.interpreter.execute(Samples[i][0])
+            print(a)
+            self.assertEqual(a, Samples[i][1])
 
     def testDisplayGuessed(self):
-        f = open("Test_Code.txt", "r")
-        Data = f.read()
-        Data = Data.replace('\n', '')
-        Samples = Data.split("#")
-        for i in range(len(Samples)):
-            Samples[i] = Samples[i].split('_')
-            print(Samples[i])
-        self.assertEqual(self.interpreter.execute(Samples[0][0]), Samples[0][1])  # 답은 3
-        self.assertEqual(self.interpreter.execute(Samples[1][0]), Samples[1][1])  # 답은 3
         pass
 
 if __name__ == '__main__':
