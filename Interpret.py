@@ -36,7 +36,7 @@ class Interpreter:
             
         return codes
 
-    def execute(self, codes, stdin):
+    def execute(self, codes, stdin=""):
         stdout = str()
         codes = self.interpret(codes)
         isNumCode = lambda c: c in (OpCodes.Op_Num_0, OpCodes.Op_Num_1)
