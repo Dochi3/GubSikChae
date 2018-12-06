@@ -1,4 +1,3 @@
-from PyQt5.QtWidgets import QTextEdit
 from WordToOpCode import wordToOpCode
 import OpCodes
 class Interpreter:
@@ -37,14 +36,14 @@ class Interpreter:
             
         return codes
 
-    def execute(self, codes, stdin:QTextEdit, stdout:QTextEdit):
+    def execute(self, codes, stdin):
+        stdout = str()
         codes = self.interpret(codes)
         isNumCode = lambda c: c in (OpCodes.Op_Num_0, OpCodes.Op_Num_1)
         typeDouble = 0
         typeInt = 1
         typeChar = 2
         charMax = 65536
-
         idx = 0
         while idx < len(codes):
             code, nextIdx = codes[idx]
@@ -137,7 +136,25 @@ class Interpreter:
             elif code == OpCodes.Op_Condition_End:
                 idx = nextIdx - 1
             elif code == OpCodes.Op_Input:
-                pass
+                # raise error if pointer out of index
+                if self.memoryPointer < 0 or self.memoryPointer >= len(self.memory[self.typePointer]):
+                    raise Exception("Index Error")
+                try:
+                    if self.typePointer == typeChar:
+                        temp = ord(stdin[0])
+                        stdin = stdin[1:]
+                    else:
+                        stdin = stdin.lstrip()
+                        pos = stdin.find(' ')
+                        stdin = stdin[pos:]
+                        temp = stdin[:pos]
+                        if self.typePointer == typeDouble:
+                            temp = float(temp)
+                        else:
+                            temp = int(temp)
+                    self.memory[self.typePointer][self.memoryPointer] = temp
+                except:
+                    raise Exception("Input Error")
             elif code == OpCodes.Op_Ouput:
                 text = str()
                 temp = self.memory[self.typePointer][self.memoryPointer]
@@ -145,5 +162,6 @@ class Interpreter:
                     text = chr(temp)
                 else:
                     text = str(temp)
-                stdout.setText(stdout.text() + text)
+                stdout += text
             idx += 1
+        return stdout
