@@ -7,6 +7,18 @@ class Interpreter:
         self.memoryPointer = 0
         self.memory = [[], [], []]
         self.calculatorMemory = []
+    
+    def getDoubleMemory(self):
+        return self.memory[0]
+
+    def getIntMemory(self):
+        return self.memory[1]
+
+    def getCharMemory(self):
+        return self.memory[2]
+
+    def getCalculatorMemory(self):
+        return reversed(self.calculatorMemory)
 
     def interpret(self, codes):
         Words = codes.split()
