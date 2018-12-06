@@ -163,7 +163,7 @@ class Interpreter:
                 temp = self.memory[self.typePointer][self.memoryPointer]
                 if self.typePointer == typeChar:
                     text = chr(temp)
-                    print(type(text), text)
+                    #print(type(text), text)
                 else:
                     text = str(temp)
                 stdout += text

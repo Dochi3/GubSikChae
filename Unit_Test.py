@@ -23,6 +23,7 @@ class TestGuess(unittest.TestCase):
         for i in range(len(Samples)):
             self.interpreter = Interpreter()
             a = self.interpreter.execute(Samples[i][0])
+            print(a)
             self.assertEqual(a, Samples[i][1])
         f.close()
 
