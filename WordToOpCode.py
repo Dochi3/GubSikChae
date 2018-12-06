@@ -1,8 +1,11 @@
 import OpCodes
 
 wordToOpCode = {
+    "ㅇㅈㄱㅇ" : OpCodes.Op_Add,
     "오지구요" : OpCodes.Op_Add,
+    "ㅈㄹㄱㅇ" : OpCodes.Op_Substract,
     "지리구요" : OpCodes.Op_Substract,
+    "ㄱㅇㄷ" : OpCodes.Op_Multiply,
     "개이득" : OpCodes.Op_Multiply,
     "에바" : OpCodes.Op_Divide,
     "ㄴㄴ" : OpCodes.Op_Type_Move_Left,
