@@ -8,22 +8,27 @@ class Control(QWidget):
 
         self.hblBox1 = QHBoxLayout()
 
-        self.tbExcuteButton = QToolButton('Run')
+        self.tbExcuteButton = QToolButton()
+        self.tbExcuteButton.setText("Run")
         self.tbExcuteButton.clicked.connect(parent.startProcess)
         self.hblBox1.addWidget(self.tbExcuteButton)
 
-        self.tbPauseButton = QToolButton('Pause')
+        self.tbPauseButton = QToolButton()
+        self.tbPauseButton.setText("Pause")
         self.tbPauseButton.clicked.connect(parent.stopProcess)
         self.hblBox1.addWidget(self.tbPauseButton)
 
-        self.tbResetMemoryButton = QToolButton("ResetMenory")
+        self.tbResetMemoryButton = QToolButton()
+        self.tbResetMemoryButton.setText("ResetMemory")
         self.tbResetMemoryButton.clicked.connect(parent.restartProcess)
         self.hblBox1.addWidget(self.tbResetMemoryButton)
 
-        self.lbRunningLabel = QLabel("Status:Paused") #????????
-        self.hblBox1.addWidget(self.lRunningLabel)
+        self.lbRunning = QLabel()
+        self.hblBox1.addWidget(self.lbRunning)
+
+        self.setLayout(self.hblBox1)
 
 
-    def changeStatus(self,status):
-        self.lbRunningLabel.setText("Status:"+status)
+    def changeStatus(self, status):
+        self.lbRunning.setText("Status : " + status)
 

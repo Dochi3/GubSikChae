@@ -1,4 +1,5 @@
 from CodeBlock import CodeBlock
+from Control import Control
 from Viewer import Viewer
 from Interpret import Interpreter
 import Shortcuts
@@ -18,9 +19,9 @@ class Editor(QMainWindow):
         self.excuteNumber = 0
         self.process = None
         self.interpreter = None
-        self.restartProcess()
 
         self.initUI()
+        self.restartProcess()
 
     def initUI(self):
         # Widget of CodeBlocks
@@ -37,14 +38,16 @@ class Editor(QMainWindow):
         self.newCodeBlock()
 
         # Widget of Control
+        self.control = Control(self)
 
         # Widget of Viewer
         self.viewer = Viewer()
 
         # Layout of Editor
         glEditor = QGridLayout()
-        glEditor.addWidget(saCodeBlocks, 0, 0, 1, 3)
-        glEditor.addWidget(self.viewer, 0, 3, 1, 1)
+        glEditor.addWidget(saCodeBlocks, 0, 0, 10, 1)
+        glEditor.addWidget(self.control, 0, 1, 1, 1)
+        glEditor.addWidget(self.viewer, 1, 1)
 
         # Widget of Editor
         wgEditor = QWidget()
@@ -77,11 +80,16 @@ class Editor(QMainWindow):
         
         code = self.codeBlocks[self.index].getCode()
         stdin = self.viewer.teStdin.text()
-        stdout = self.interpreter.execute(code, stdin)
+        try:
+            stdout = self.interpreter.execute(code, stdin)
+        except Exception as e:
+            stdout = e
         self.viewer.teStdout.setText(stdout)
+        self.control.changeStatus("Paused")
 
     # restart Process
     def restartProcess(self):
+        self.stopProcess()
         self.excuteNumber = 0
         self.interpreter = Interpreter()
         for codeBlock in self.codeBlocks:
@@ -118,11 +126,11 @@ class Editor(QMainWindow):
         self.keyPressed.add(event.key())
         key = Shortcuts.shortcuts.get(frozenset(self.keyPressed), "No Matching")
         if key == Shortcuts.Key_Ctrl_Enter:
-            self.executeCodeBlock()
+            self.startProcess()
         elif key == Shortcuts.Key_Ctrl_R:
             self.restartProcess()
         elif key == Shortcuts.Key_Alt_Enter:
-            self.executeCodeBlock()
+            self.startProcess()
             self.newCodeBlock()
         elif key == Shortcuts.Key_Alt_BackSpace:
             self.removeCodeBlock()
@@ -130,9 +138,12 @@ class Editor(QMainWindow):
 
     def startProcess(self):
         self.stopProcess()
+        self.control.changeStatus("Running...")
         self.process = Process(target=self.executeCodeBlock())
+        self.process.start()
 
     def stopProcess(self):
+        self.control.changeStatus("Paused")
         if self.process:
             self.process.terminate()
         self.process = None
@@ -140,12 +151,6 @@ class Editor(QMainWindow):
     def keyReleaseEvent(self, event):
         if event.key() in self.keyPressed:
             self.keyPressed.remove(event.key())
-    
-    def executeBtn(self):
-        pass
-    
-    def pauseBtn(self):
-        pass
 
 if __name__ == "__main__":
     import sys

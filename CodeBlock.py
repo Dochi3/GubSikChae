@@ -47,7 +47,7 @@ class CodeBlock(QWidget):
     def fixedHeight(self):
         nRows = max(self.teCodeBox.toPlainText().count('\n') + 1, 5)
         qFontMetrics = QFontMetrics(self.teCodeBox.font())
-        rowHeight = qFontMetrics.lineSpacing() + 1
+        rowHeight = qFontMetrics.lineSpacing() + 5
         self.teCodeBox.setFixedHeight(rowHeight * nRows + 10)
 
     def focusIn(self):
