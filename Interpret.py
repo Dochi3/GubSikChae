@@ -1,3 +1,4 @@
+from PyQt5.QtWidgets import QTextEdit
 from WordToOpCode import wordToOpCode
 import OpCodes
 class Interpreter:
@@ -36,39 +37,86 @@ class Interpreter:
             
         return codes
 
-    def execute(self, codes, stdin, stdout):
+    def execute(self, codes, stdin:QTextEdit, stdout:QTextEdit):
         codes = self.interpret(codes)
         isNumCode = lambda c: c in (OpCodes.Op_Num_0, OpCodes.Op_Num_1)
+        typeDouble = 0
+        typeInt = 1
+        typeChar = 2
+        charMax = 65536
 
-        for idx, code in enumerate(codes):
+        idx = 0
+        while idx < len(codes):
+            code, nextIdx = codes[idx]
             if isNumCode(code):
                 continue
             temp = 0
             if code == OpCodes.Op_Add:
+                # raise if CM has no elements
                 if not self.calculatorMemory:
                     raise Exception("Segment Fault")
+                
+                # add all elements of CM
                 while self.calculatorMemory:
                     temp += self.calculatorMemory[-1]
                     self.calculatorMemory.pop()
                 self.calculatorMemory.append(temp)
             elif code == OpCodes.Op_Substract:
-                pass
+                # raise if CM has no elements
+                if not self.calculatorMemory:
+                    raise Exception("Segment Fault")
+                
+                # subtract all elements of CM at CM.top
+                temp = 2 * self.calculatorMemory[-1]
+                while self.calculatorMemory:
+                    temp -= self.calculatorMemory[-1]
+                    self.calculatorMemory.pop()
+                self.calculatorMemory.append(temp)
             elif code == OpCodes.Op_Multiply:
-                pass
+                # raise if CM has no elements
+                if not self.calculatorMemory:
+                    raise Exception("Segment Fault")
+                
+                # multiply all elements of CM
+                temp = 1
+                while self.calculatorMemory:
+                    temp *= self.calculatorMemory[-1]
+                    self.calculatorMemory.pop()
+                self.calculatorMemory.append(temp)
             elif code == OpCodes.Op_Divide:
-                pass
+                # raise if CM has no elements
+                if not self.calculatorMemory:
+                    raise Exception("Segment Fault")
+                
+                # divide all elemnet of CM at CM.top
+                temp = self.calculatorMemory[-1] ** 2
+                while self.calculatorMemory:
+                    temp /= self.calculatorMemory
             elif code == OpCodes.Op_Type_Move_Left:
-                pass
+                self.typePointer = (self.typePointer + 2) // 3
+                self.memoryPointer = 0
             elif code == OpCodes.Op_Type_Move_Right:
-                pass
+                self.typePointer = (self.typePointer + 1) // 3
+                self.memoryPointer = 0
             elif code == OpCodes.Op_Memory_Move_Up:
-                pass
+                self.memoryPointer -= 1
             elif code == OpCodes.Op_Memory_Move_Down:
-                pass
+                self.memoryPointer += 1
             elif code == OpCodes.Op_Stack_Push:
-                pass
+                self.calculatorMemory.append(self.memory[self.typePointer][self.memoryPointer])
             elif code == OpCodes.Op_Stack_Pop:
-                pass
+                # raise if CM has no elements
+                if not self.calculatorMemory:
+                    raise Exception("Segment Fault")
+                
+                temp = self.calculatorMemory[-1]
+                if self.typePointer == typeDouble:
+                    self.memory[self.typePointer][self.memoryPointer] = temp
+                elif self.typePointer == typeInt:
+                    self.memory[self.typePointer][self.memoryPointer] = int(temp)
+                else:
+                    self.memory[self.typePointer][self.memoryPointer] = int(temp) % charMax
+                self.calculatorMemory.pop()
             elif code == OpCodes.Op_List_Insert:
                 if idx + 1 < len(codes) and isNumCode(codes[idx + 1][0]):
                     num = 0 if codes[idx + 1][0] == OpCodes.Op_Num_0 else 1
@@ -76,12 +124,26 @@ class Interpreter:
                 else:
                     raise Exception("Syntax Error")
             elif code == OpCodes.Op_List_Delete:
-                pass
+                # raise error if pointer out of index
+                if self.memoryPointer < 0 or self.memoryPointer >= len(self.memory[self.typePointer]):
+                    raise Exception("Index Error")
+                del self.memory[self.typePointer][self.memoryPointer]
             elif code == OpCodes.Op_Condition_Begin:
-                pass
+                # raise error if pointer out of index
+                if self.memoryPointer < 0 or self.memoryPointer >= len(self.memory[self.typePointer]):
+                    raise Exception("Index Error")
+                if not self.memory[self.typePointer][self.memoryPointer]:
+                    idx = nextIdx
             elif code == OpCodes.Op_Condition_End:
-                pass
+                idx = nextIdx - 1
             elif code == OpCodes.Op_Input:
                 pass
             elif code == OpCodes.Op_Ouput:
-                pass
+                text = str()
+                temp = self.memory[self.typePointer][self.memoryPointer]
+                if self.typePointer == typeChar:
+                    text = chr(temp)
+                else:
+                    text = str(temp)
+                stdout.setText(stdout.text() + text)
+            idx += 1
