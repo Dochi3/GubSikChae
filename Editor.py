@@ -9,6 +9,8 @@ from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget
 from PyQt5.QtWidgets import QHBoxLayout, QVBoxLayout, QGridLayout
 from PyQt5.QtWidgets import QLabel, QScrollArea
 from multiprocessing import Process, Manager
+from multiprocessing.managers import BaseManager
+
 class Editor(QMainWindow):
     def __init__(self):
         super().__init__()
@@ -18,12 +20,15 @@ class Editor(QMainWindow):
         self.excuteNumber = 0
         self.process = None
         self.interpreter = None
+        BaseManager.register('Interpreter', Interpreter)
+        self.interpreterManager = BaseManager()
+        self.interpreterManager.start()
 
         self.initUI()
         self.restartProcess()
 
         self.timer = QTimer(self)
-        self.timer.setInterval(1000)
+        self.timer.setInterval(1)
         self.timer.timeout.connect(self.checkProcess) 
         self.timer.start()
 
@@ -106,12 +111,12 @@ class Editor(QMainWindow):
         except Exception as e:
             stdout = str(e)
         self.viewer.teStdout.setText(stdout)
-        return self.interpreter
+        print("finish")
 
     # restart Process
     def restartProcess(self):
         self.excuteNumber = 0
-        self.interpreter = Interpreter()
+        self.interpreter = self.interpreterManager.Interpreter()
         for codeBlock in self.codeBlocks:
             codeBlock.setNumber()
         self.stopProcess()
@@ -139,7 +144,10 @@ class Editor(QMainWindow):
         if self.process and self.process.is_alive():
             return
         if self.process:
+            print("join")
             self.process.join()
+            self.process.terminate()
+            self.process = None
         self.blockContorl.changeStatus(False)
         if self.interpreter:
             self.displayMemory()
