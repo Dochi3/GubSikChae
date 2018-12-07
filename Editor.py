@@ -24,6 +24,11 @@ class Editor(QMainWindow):
         self.interpreterManager = BaseManager()
         self.interpreterManager.start()
 
+        ## set FontSize
+        font = self.font()
+        font.setPointSize(12)
+        self.setFont(font)
+
         self.initUI()
         self.restartProcess()
 

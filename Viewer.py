@@ -61,14 +61,17 @@ class Viewer(QWidget):
 
         for typePointer in range(len(memory)):
             for memoryPointer in range(len(memory[typePointer])):
-                lbData = QLabel(memory[typePointer][memoryPointer])
+                data = memory[typePointer][memoryPointer]
+                if len(data) > 12:
+                    data = data[:12] + "..."
+                lbData = QLabel(data)
                 lbData.setAlignment(Qt.AlignCenter)
                 color = str()
                 if pointer == (typePointer, memoryPointer):
                     color = "red"
                 else:
                     if (typePointer + memoryPointer) % 2:
-                        color = "gray"
+                        color = "silver"
                     else:
                         color = "white"
                 lbData.setStyleSheet("QLabel{ background-color : " + color + ";}")
