@@ -41,22 +41,26 @@ class Interpreter:
             try:
                 code = wordToOpCode[word]
             except:
-                raise Exception("Syntax Error")
-
+                if not checkRemark:
+                    raise Exception("Syntax Error")
+                continue
+            
             if code == OpCodes.Op_Remark:
                 checkRemark = not checkRemark
+            
+            if checkRemark:
+                continue
 
-            if not checkRemark:
-                if code == OpCodes.Op_Condition_Begin:
-                    Stack.append(len(codes))
-                elif code == OpCodes.Op_Condition_End:
-                    codes[Stack[-1]] = (codes[Stack[-1]][0], len(codes))
-                    idx = Stack[-1]
-                    Stack.pop()
-                else:
-                    idx = 0
+            if code == OpCodes.Op_Condition_Begin:
+                Stack.append(len(codes))
+            elif code == OpCodes.Op_Condition_End:
+                codes[Stack[-1]] = (codes[Stack[-1]][0], len(codes))
+                idx = Stack[-1]
+                Stack.pop()
+            else:
+                idx = 0
 
-                codes.append((code, idx))
+            codes.append((code, idx))
             
         return codes
 

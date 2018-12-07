@@ -177,7 +177,9 @@ class Editor(QMainWindow):
 
     def loadFile(self):
         fileInput = self.openFile("r")
-        codes = fileInput.read().replace("\n", '').split("##CodeBlock##")
+        if not fileInput:
+            return
+        codes = fileInput.read().split("##CodeBlock##\n")
         if len(codes) > 1:
             codes = codes[1:]
         while len(self.codeBlocks) > 1:
@@ -190,6 +192,8 @@ class Editor(QMainWindow):
 
     def saveFile(self):
         fileOutput = self.openFile("w")
+        if not fileOutput:
+            return
         code = str()
         for codeBlcok in self.codeBlocks:
             code += ("##CodeBlock##\n" + codeBlcok.getCode() + "\n")
