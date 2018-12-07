@@ -58,3 +58,6 @@ class CodeBlock(QWidget):
     
     def getCode(self):
         return self.teCodeBox.toPlainText()
+    
+    def setCode(self, code):
+        self.teCodeBox.setText(code)

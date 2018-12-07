@@ -1,5 +1,5 @@
 from CodeBlock import CodeBlock
-from Control import Control
+from Control import FileControl, BlockControl
 from Viewer import Viewer
 from Interpret import Interpreter
 import Shortcuts
@@ -36,8 +36,11 @@ class Editor(QMainWindow):
         wgCodeBlocks.setLayout(self.vblCodeBlocks)
         self.newCodeBlock()
 
-        # Widget of Control
-        self.control = Control(self)
+        # Widget of FileControl
+        self.fileControl = FileControl(self)
+
+        # Widget of BlockControl
+        self.blockContorl = BlockControl(self)
 
         # Widget of Viewer
         self.viewer = Viewer()
@@ -45,8 +48,9 @@ class Editor(QMainWindow):
         # Layout of Editor
         glEditor = QGridLayout()
         glEditor.addWidget(saCodeBlocks, 0, 0, 10, 1)
-        glEditor.addWidget(self.control, 0, 1, 1, 1)
-        glEditor.addWidget(self.viewer, 1, 1)
+        glEditor.addWidget(self.fileControl, 0, 1, 1, 1)
+        glEditor.addWidget(self.blockContorl, 1, 1, 1, 1)
+        glEditor.addWidget(self.viewer, 2, 1)
 
         # Widget of Editor
         wgEditor = QWidget()
@@ -112,14 +116,14 @@ class Editor(QMainWindow):
     def startProcess(self):
         if self.process:
             return
-        self.control.changeStatus(True)
+        self.blockContorl.changeStatus(True)
         self.process = Process(target=self.executeCodeBlock())
         self.process.daemon = True
         self.process.start()
         self.stopProcess()
 
     def stopProcess(self):
-        self.control.changeStatus(False)
+        self.blockContorl.changeStatus(False)
         if self.process:
             self.process.terminate()
         self.process = None
@@ -161,11 +165,35 @@ class Editor(QMainWindow):
         if event.key() in self.keyPressed:
             self.keyPressed.remove(event.key())
     
-    def saveFile(self):
-        filename = str()
+    def openFile(self, mode):
+        try:
+            filename = self.fileControl.getFilename() + ".gsc"
+            fileMode = open(filename, mode)
+            return fileMode
+        except:
+            self.fileControl.setMessage("Please Give Valid Filename")
 
     def loadFile(self):
-        filename = str()
+        fileInput = self.openFile("r")
+        codes = fileInput.read().replace("\n", '').split("##CodeBlock##")
+        if len(codes) > 1:
+            codes = codes[1:]
+        while len(self.codeBlocks) > 1:
+            self.removeCodeBlock()
+        for idx, code in enumerate(codes):
+            code = code.strip()
+            print(idx, code)
+            self.codeBlocks[idx].setCode(code)
+            self.newCodeBlock()
+        fileInput.close()
+
+    def saveFile(self):
+        fileOutput = self.openFile("w")
+        code = str()
+        for codeBlcok in self.codeBlocks:
+            code += ("##CodeBlock##\n" + codeBlcok.getCode() + "\n")
+        fileOutput.write(code)
+        fileOutput.close()
 
 if __name__ == "__main__":
     import sys

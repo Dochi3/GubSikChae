@@ -63,14 +63,15 @@ class Viewer(QWidget):
             for memoryPointer in range(len(memory[typePointer])):
                 lbData = QLabel(memory[typePointer][memoryPointer])
                 lbData.setAlignment(Qt.AlignCenter)
+                color = str()
                 if pointer == (typePointer, memoryPointer):
-                    lbData.setStyleSheet("QLabel{ background-color : red;}")
+                    color = "red"
                 else:
                     if (typePointer + memoryPointer) % 2:
-                        lbData.setStyleSheet("QLabel{ background-color : gray;}")
+                        color = "gray"
                     else:
-                        lbData.setStyleSheet("QLabel{ background-color : white;}")
-                
+                        color = "white"
+                lbData.setStyleSheet("QLabel{ background-color : " + color + ";}")
                 self.glMemory.addWidget(lbData, memoryPointer + 1, typePointer)
         
         self.beforeMemory = memory
