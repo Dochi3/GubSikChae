@@ -111,7 +111,6 @@ class Editor(QMainWindow):
         except Exception as e:
             stdout = str(e)
         self.viewer.teStdout.setText(stdout)
-        print("finish")
 
     # restart Process
     def restartProcess(self):
@@ -144,7 +143,6 @@ class Editor(QMainWindow):
         if self.process and self.process.is_alive():
             return
         if self.process:
-            print("join")
             self.process.join()
             self.process.terminate()
             self.process = None
