@@ -107,10 +107,9 @@ class Editor(QMainWindow):
         code = self.codeBlocks[self.index].getCode()
         stdin = self.viewer.teStdin.text()
         try:
-            stdout = self.interpreter.execute(code, stdin)
+            self.interpreter.setText(self.interpreter.execute(code, stdin))
         except Exception as e:
-            stdout = str(e)
-        self.viewer.teStdout.setText(stdout)
+            self.interpreter.setText(str(e))
 
     # restart Process
     def restartProcess(self):
@@ -131,12 +130,9 @@ class Editor(QMainWindow):
         self.process.start()
 
     def stopProcess(self):
-        self.blockContorl.changeStatus(False)
         if self.process:
             self.process.terminate()
         self.process = None
-        if self.interpreter:
-            self.displayMemory()
     
     @pyqtSlot()
     def checkProcess(self):
@@ -148,6 +144,7 @@ class Editor(QMainWindow):
             self.process = None
         self.blockContorl.changeStatus(False)
         if self.interpreter:
+            self.viewer.teStdout.setText(self.interpreter.getText())
             self.displayMemory()
 
     # focus which textEdit to fix

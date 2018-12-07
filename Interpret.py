@@ -4,10 +4,17 @@ import OpCodes
 class Interpreter:
 
     def __init__(self):
+        self.stdout = str()
         self.typePointer = 0
         self.memoryPointer = 0
         self.memory = [[], [], []]
         self.calculatorMemory = []
+    
+    def getText(self):
+        return self.stdout
+
+    def setText(self, text):
+        self.stdout = text
     
     def getMemory(self):
         returnMemory = []
