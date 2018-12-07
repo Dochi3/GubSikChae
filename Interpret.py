@@ -1,3 +1,4 @@
+import time
 from WordToOpCode import wordToOpCode
 import OpCodes
 class Interpreter:
@@ -69,6 +70,7 @@ class Interpreter:
         charMax = 65536
         idx = 0
         while idx < len(codes):
+            time.sleep(3E-3)
             code, nextIdx = codes[idx]
             if isNumCode(code):
                 idx += 1
@@ -171,9 +173,8 @@ class Interpreter:
                         stdin = stdin[1:]
                     else:
                         stdin = stdin.lstrip()
-                        pos = stdin.find(' ')
-                        stdin = stdin[pos:]
-                        temp = stdin[:pos]
+                        temp = stdin.split()[0]
+                        stdin = stdin[stdin.find(temp) + len(temp):]
                         if self.typePointer == typeDouble:
                             temp = float(temp)
                         else:

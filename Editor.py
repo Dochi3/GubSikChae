@@ -77,6 +77,16 @@ class Editor(QMainWindow):
         self.codeBlocks.insert(self.index + 1, codeBlock)
         self.index += 1
         self.setCodeBoxLayout()
+
+    # remove CodeBlock
+    def removeCodeBlock(self):
+        if len(self.codeBlocks) <= 1:
+            return
+        focusedTime = self.codeBlocks[self.index].focusedTime
+        self.codeBlocks.remove(self.codeBlocks[self.index])
+        self.index = min(len(self.codeBlocks) - 1, self.index)
+        self.codeBlocks[self.index].focusedTime = focusedTime
+        self.setCodeBoxLayout()
     
     # excute CodeBlock
     def executeCodeBlock(self):
@@ -90,7 +100,6 @@ class Editor(QMainWindow):
         except Exception as e:
             stdout = str(e)
         self.viewer.teStdout.setText(stdout)
-        self.control.changeStatus("Paused")
 
     # restart Process
     def restartProcess(self):
@@ -103,28 +112,19 @@ class Editor(QMainWindow):
     def startProcess(self):
         if self.process:
             return
-        self.control.changeStatus("Running...")
+        self.control.changeStatus(True)
         self.process = Process(target=self.executeCodeBlock())
+        self.process.daemon = True
         self.process.start()
         self.stopProcess()
 
     def stopProcess(self):
-        self.control.changeStatus("Paused")
+        self.control.changeStatus(False)
         if self.process:
             self.process.terminate()
         self.process = None
         if self.interpreter:
             self.displayMemory()
-
-    # remove CodeBlock
-    def removeCodeBlock(self):
-        if len(self.codeBlocks) <= 1:
-            return
-        focusedTime = self.codeBlocks[self.index].focusedTime
-        self.codeBlocks.remove(self.codeBlocks[self.index])
-        self.index = min(len(self.codeBlocks) - 1, self.index)
-        self.codeBlocks[self.index].focusedTime = focusedTime
-        self.setCodeBoxLayout()
 
     # focus which textEdit to fix
     def setCodeBoxFocus(self, index):
@@ -160,6 +160,12 @@ class Editor(QMainWindow):
     def keyReleaseEvent(self, event):
         if event.key() in self.keyPressed:
             self.keyPressed.remove(event.key())
+    
+    def saveFile(self):
+        filename = str()
+
+    def loadFile(self):
+        filename = str()
 
 if __name__ == "__main__":
     import sys
