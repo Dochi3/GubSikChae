@@ -4,11 +4,11 @@ from Viewer import Viewer
 from Interpret import Interpreter
 import Shortcuts
 
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import Qt, QTimer, pyqtSlot
 from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget
 from PyQt5.QtWidgets import QHBoxLayout, QVBoxLayout, QGridLayout
 from PyQt5.QtWidgets import QLabel, QScrollArea
-from multiprocessing import Process
+from multiprocessing import Process, Manager
 class Editor(QMainWindow):
     def __init__(self):
         super().__init__()
@@ -21,6 +21,11 @@ class Editor(QMainWindow):
 
         self.initUI()
         self.restartProcess()
+
+        self.timer = QTimer(self)
+        self.timer.setInterval(1000)
+        self.timer.timeout.connect(self.checkProcess) 
+        self.timer.start()
 
     def initUI(self):
         # Widget of CodeBlocks
@@ -94,9 +99,6 @@ class Editor(QMainWindow):
     
     # excute CodeBlock
     def executeCodeBlock(self):
-        self.excuteNumber += 1
-        self.codeBlocks[self.index].setNumber(self.excuteNumber)
-        
         code = self.codeBlocks[self.index].getCode()
         stdin = self.viewer.teStdin.text()
         try:
@@ -104,6 +106,7 @@ class Editor(QMainWindow):
         except Exception as e:
             stdout = str(e)
         self.viewer.teStdout.setText(stdout)
+        return self.interpreter
 
     # restart Process
     def restartProcess(self):
@@ -114,8 +117,10 @@ class Editor(QMainWindow):
         self.stopProcess()
 
     def startProcess(self):
-        if self.process:
+        if self.process and self.process.is_alive():
             return
+        self.excuteNumber += 1
+        self.codeBlocks[self.index].setNumber(self.excuteNumber)
         self.blockContorl.changeStatus(True)
         self.process = Process(target=self.executeCodeBlock)
         self.process.daemon = True
@@ -126,6 +131,16 @@ class Editor(QMainWindow):
         if self.process:
             self.process.terminate()
         self.process = None
+        if self.interpreter:
+            self.displayMemory()
+    
+    @pyqtSlot()
+    def checkProcess(self):
+        if self.process and self.process.is_alive():
+            return
+        if self.process:
+            self.process.join()
+        self.blockContorl.changeStatus(False)
         if self.interpreter:
             self.displayMemory()
 
