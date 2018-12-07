@@ -167,8 +167,10 @@ class Editor(QMainWindow):
     
     def openFile(self, mode):
         try:
-            filename = self.fileControl.getFilename() + ".gsc"
-            fileMode = open(filename, mode)
+            filename = self.fileControl.getFilename()
+            if not filename:
+                raise Exception("Invalid Filename")
+            fileMode = open("./" + filename + ".gsc", mode)
             return fileMode
         except:
             self.fileControl.setMessage("Please Give Valid Filename")
@@ -182,7 +184,6 @@ class Editor(QMainWindow):
             self.removeCodeBlock()
         for idx, code in enumerate(codes):
             code = code.strip()
-            print(idx, code)
             self.codeBlocks[idx].setCode(code)
             self.newCodeBlock()
         fileInput.close()
