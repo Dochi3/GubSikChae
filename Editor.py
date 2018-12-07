@@ -117,10 +117,9 @@ class Editor(QMainWindow):
         if self.process:
             return
         self.blockContorl.changeStatus(True)
-        self.process = Process(target=self.executeCodeBlock())
+        self.process = Process(target=self.executeCodeBlock)
         self.process.daemon = True
         self.process.start()
-        self.stopProcess()
 
     def stopProcess(self):
         self.blockContorl.changeStatus(False)
