@@ -138,6 +138,7 @@ class Editor(QMainWindow):
         if self.process:
             self.process.terminate()
         self.process = None
+        self.viewer.teStdout.setText("Process terminated")
     
     @pyqtSlot()
     def checkProcess(self):
@@ -147,9 +148,13 @@ class Editor(QMainWindow):
             self.process.join()
             self.process.terminate()
             self.process = None
+            text = self.viewer.teStdout.text()
+            if text == "Process terminated":
+                text = ""
+            text += self.interpreter.getText()
+            self.viewer.teStdout.setText(text)
         self.blockContorl.changeStatus(False)
         if self.interpreter:
-            self.viewer.teStdout.setText(self.interpreter.getText())
             self.displayMemory()
 
     # focus which textEdit to fix
