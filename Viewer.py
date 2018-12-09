@@ -47,7 +47,6 @@ class Viewer(QWidget):
         vblViewer = QVBoxLayout()
         vblViewer.addWidget(twStd)
         vblViewer.addWidget(saMemory)
-        self.memoryLayouts = []
         self.beforeMemory = [[], [], [], []]
 
         self.setLayout(vblViewer)
