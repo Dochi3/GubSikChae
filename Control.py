@@ -39,7 +39,7 @@ class BlockControl(QWidget):
         self.hblBox1 = QHBoxLayout()
 
         controlTexts = ["AddBlock", "DeleteBlock", "Run", "Pause", "Reset"]
-        controlMethods = [parent.newCodeBlock, parent.removeCodeBlock,
+        controlMethods = [parent.newCodeBlock, parent.deleteCodeBlock,
                           parent.startProcess, parent.stopProcess,
                           parent.restartProcess]
 
