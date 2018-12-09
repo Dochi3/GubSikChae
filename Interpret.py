@@ -81,7 +81,6 @@ class Interpreter:
         charMax = 65536
         idx = 0
         while idx < len(codes):
-            time.sleep(3E-3)
             code, nextIdx = codes[idx]
             if isNumCode(code):
                 idx += 1
