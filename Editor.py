@@ -55,7 +55,7 @@ class Editor(QMainWindow):
         self.fileControl = FileControl(self)
 
         # Widget of BlockControl
-        self.blockContorl = BlockControl(self)
+        self.blockControl = BlockControl(self)
 
         # Widget of Viewer
         self.viewer = Viewer()
@@ -64,7 +64,7 @@ class Editor(QMainWindow):
         glEditor = QGridLayout()
         glEditor.addWidget(saCodeBlocks, 0, 0, 10, 1)
         glEditor.addWidget(self.fileControl, 0, 1, 1, 1)
-        glEditor.addWidget(self.blockContorl, 1, 1, 1, 1)
+        glEditor.addWidget(self.blockControl, 1, 1, 1, 1)
         glEditor.addWidget(self.viewer, 2, 1)
 
         # Widget of Editor
@@ -129,7 +129,7 @@ class Editor(QMainWindow):
             return
         self.excuteNumber += 1
         self.codeBlocks[self.index].setNumber(self.excuteNumber)
-        self.blockContorl.changeStatus(True)
+        self.blockControl.changeStatus(True)
         self.process = Process(target=self.executeCodeBlock)
         self.process.daemon = True
         self.process.start()
@@ -153,7 +153,7 @@ class Editor(QMainWindow):
                 text = ""
             text += self.interpreter.getText()
             self.viewer.teStdout.setText(text)
-        self.blockContorl.changeStatus(False)
+        self.blockControl.changeStatus(False)
         if self.interpreter:
             self.displayMemory()
 
