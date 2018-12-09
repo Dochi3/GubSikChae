@@ -98,7 +98,7 @@ class Editor(QMainWindow):
         self.setCodeBoxLayout()
 
     # remove CodeBlock
-    def removeCodeBlock(self):
+    def deleteCodeBlock(self):
         if len(self.codeBlocks) <= 1:
             return
         focusedTime = self.codeBlocks[self.index].focusedTime
@@ -185,7 +185,7 @@ class Editor(QMainWindow):
             self.startProcess()
             self.newCodeBlock()
         elif key == Shortcuts.Key_Alt_BackSpace:
-            self.removeCodeBlock()
+            self.deleteCodeBlock()
         self.mousePressEvent(event)
 
     def keyReleaseEvent(self, event):
@@ -210,7 +210,7 @@ class Editor(QMainWindow):
         if len(codes) > 1:
             codes = codes[1:]
         while len(self.codeBlocks) > 1:
-            self.removeCodeBlock()
+            self.deleteCodeBlock()
         for idx, code in enumerate(codes):
             code = code.strip()
             self.codeBlocks[idx].setCode(code)
