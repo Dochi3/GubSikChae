@@ -169,7 +169,7 @@ class Interpreter:
                 # raise error if pointer out of index
                 if self.memoryPointer < 0 or self.memoryPointer >= len(self.memory[self.typePointer]):
                     raise Exception("Index Error")
-                if self.memory[self.typePointer][self.memoryPointer] > 0:
+                if self.memory[self.typePointer][self.memoryPointer] <= 0:
                     idx = nextIdx
             elif code == OpCodes.Op_Condition_End:
                 idx = nextIdx - 1
