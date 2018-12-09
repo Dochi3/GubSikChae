@@ -149,7 +149,7 @@ class Editor(QMainWindow):
             self.process.terminate()
             self.process = None
             text = self.viewer.teStdout.text()
-            if text == "Process terminated":
+            if text == "Process terminated" or "Error" in text:
                 text = ""
             text += self.interpreter.getText()
             self.viewer.teStdout.setText(text)

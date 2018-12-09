@@ -90,7 +90,7 @@ class Interpreter:
             if code == OpCodes.Op_Add:
                 # raise if CM has no elements
                 if not self.calculatorMemory:
-                    raise Exception("Segment Fault")
+                    raise Exception("Segment Fault Error")
                 
                 # add all elements of CM
                 while self.calculatorMemory:
@@ -100,7 +100,7 @@ class Interpreter:
             elif code == OpCodes.Op_Substract:
                 # raise if CM has no elements
                 if not self.calculatorMemory:
-                    raise Exception("Segment Fault")
+                    raise Exception("Segment Fault Error")
                 
                 # subtract all elements of CM at CM.top
                 temp = 2 * self.calculatorMemory[-1]
@@ -111,7 +111,7 @@ class Interpreter:
             elif code == OpCodes.Op_Multiply:
                 # raise if CM has no elements
                 if not self.calculatorMemory:
-                    raise Exception("Segment Fault")
+                    raise Exception("Segment Fault Error")
                 
                 # multiply all elements of CM
                 temp = 1
@@ -122,7 +122,7 @@ class Interpreter:
             elif code == OpCodes.Op_Divide:
                 # raise if CM has no elements
                 if not self.calculatorMemory:
-                    raise Exception("Segment Fault")
+                    raise Exception("Segment Fault Error")
                 
                 # divide all elemnet of CM at CM.top
                 temp = self.calculatorMemory[-1] ** 2
@@ -145,7 +145,7 @@ class Interpreter:
             elif code == OpCodes.Op_Stack_Pop:
                 # raise if CM has no elements
                 if not self.calculatorMemory:
-                    raise Exception("Segment Fault")
+                    raise Exception("Segment Fault Error")
                 
                 temp = self.calculatorMemory[-1]
                 if self.typePointer == typeDouble:
