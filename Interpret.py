@@ -34,7 +34,7 @@ class Interpreter:
         return [str(num) for num in self.memory[1]]
 
     def getCharMemory(self):
-        return [chr(num) + "(" + str(num) + ")" for num in self.memory[2]]
+        return ["\'" + chr(num) + "\'(" + str(num) + ")" for num in self.memory[2]]
 
     def getCalculatorMemory(self):
         return [str(num) for num in reversed(self.calculatorMemory)]
@@ -140,6 +140,9 @@ class Interpreter:
             elif code == OpCodes.Op_Memory_Move_Down:
                 self.memoryPointer += 1
             elif code == OpCodes.Op_Stack_Push:
+                # raise error if pointer out of index
+                if self.memoryPointer < 0 or self.memoryPointer >= len(self.memory[self.typePointer]):
+                    raise Exception("Index Error")
                 self.calculatorMemory.append(self.memory[self.typePointer][self.memoryPointer])
             elif code == OpCodes.Op_Stack_Pop:
                 # raise if CM has no elements
