@@ -79,9 +79,6 @@ class Editor(QMainWindow):
         for i in reversed(range(self.vblCodeBlocks.count())): 
             self.vblCodeBlocks.itemAt(i).widget().setParent(None)
 
-        for i in reversed(range(self.vblCodeBlocks.count())): 
-            self.vblCodeBlocks.itemAt(i).widget().deleteLater()
-
         for codeBlock in self.codeBlocks:
             self.vblCodeBlocks.addWidget(codeBlock)
         
@@ -222,8 +219,9 @@ class Editor(QMainWindow):
         if not fileOutput:
             return
         code = str()
-        for codeBlcok in self.codeBlocks:
-            code += ("##CodeBlock##\n" + codeBlcok.getCode() + "\n")
+        for codeBlock in self.codeBlocks:
+            if codeBlock.getCode():
+                code += ("##CodeBlock##\n" + codeBlock.getCode() + "\n")
         fileOutput.write(code)
         fileOutput.close()
 
