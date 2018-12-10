@@ -206,12 +206,8 @@ class Editor(QMainWindow):
         codes = fileInput.read().split("##CodeBlock##\n")
         if len(codes) > 1:
             codes = codes[1:]
-        while len(self.codeBlocks) > 1:
-            self.deleteCodeBlock()
-        for idx, code in enumerate(codes):
-            code = code.strip()
-            self.codeBlocks[idx].setCode(code)
-            self.newCodeBlock()
+        self.codeBlocks = [CodeBlock(self, code.strip()) for code in codes]
+        self.setCodeBoxLayout()
         fileInput.close()
 
     def saveFile(self):

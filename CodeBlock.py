@@ -6,7 +6,7 @@ from PyQt5.QtGui import QFontMetrics
 import time
 
 class CodeBlock(QWidget):
-    def __init__(self, parent=None):
+    def __init__(self, parent=None, code=str()):
         super().__init__()
         self.parent = parent
         self.focusedTime = time.time()
@@ -32,6 +32,7 @@ class CodeBlock(QWidget):
         glCodeBlock.addWidget(self.lbBlockNumber, 0, 1)
         glCodeBlock.addWidget(self.teCodeBox, 0, 2)
 
+        self.setCode(code)
         self.setLayout(glCodeBlock)
 
     def setNumber(self, num=0):
